@@ -1,5 +1,6 @@
 var express = require("express")
 var app = express()
+app.set("view engine","hbs")
 var postsController = require("./controllers/postsController")
 
 app.get("/posts", postsController.index)
