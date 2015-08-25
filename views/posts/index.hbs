@@ -1,17 +1,17 @@
 <h1>Posts</h1>
-<div class='new'>
+<div class='post new'>
   <form method="post" action="/posts">
-    <input type="text" name="title" placeholder="Post Title"> <br>
-    <textarea name="body"></textarea>
+    <h3><input type="text" name="title" placeholder="Post Title"></h3>
+    <p><textarea name="body"></textarea></p>
     <button type="submit">Create New Post</button>
   </form>
 </div>
 {{#each posts}}
-   <div>
+   <div class="post">
+     <h3>{{this.title}}</h3>
+     <p>{{this.body}}</p>
      <form method="post" action="/posts/{{this.id}}?_method=delete">
        <button type="submit">Delete Post</button> 
      </form>
-     <h3>{{this.title}}</h3>
-     <p>{{this.body}}</p>
    </div>
 {{/each}}

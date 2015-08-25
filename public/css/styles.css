@@ -1,0 +1,50 @@
+html{
+  font-family:"Helvetica Neue";
+}
+.post{
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width:250px;
+  float:left;
+  color: #fff;
+  margin: 0 10px 10px 0;
+}
+
+.post h3{
+  margin-top:0;
+  letter-spacing: .05em;
+  padding:1rem;
+  background: #333;
+  font-weight:100;
+}
+
+textarea{
+  margin:0;
+  padding:0;
+  width:100%;
+  resize: vertical;
+}
+
+.post p{
+  padding: 1rem;
+}
+
+.post form{
+  margin: 1rem;
+}
+
+.post.new > form{
+  margin:0;
+}
+
+.post.new > form button{
+  margin: 1rem;
+}
+
+.post form button{
+  background:none;
+  border:none;
+  cursor: pointer;
+  padding:0;
+  color: blue;
+}
