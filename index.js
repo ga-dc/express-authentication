@@ -12,6 +12,8 @@ var passport = require("passport")
 var Strategy = require("passport-local").Strategy
 var db = require("./config/db")
 var User = require("./models/user")(db)
+app.use(passport.initialize());
+app.use(passport.session());
 
 passport.use(new Strategy(function(username, pass, cb){
   var hashedPass = bcrypt.hashSync(pass)
@@ -26,7 +28,6 @@ passport.use(new Strategy(function(username, pass, cb){
     if (!bcrypt.compareSync(pass, user.password)){ 
       return cb(null, false); }
     console.log("i made it this far")
-    console.log(user)
     return cb(null, user);
   })
 }))
@@ -36,11 +37,9 @@ passport.serializeUser(function(user, cb) {
 });
 
 passport.deserializeUser(function(id, cb) {
-  console.log(id)
   User.find({ where: {id: id}}).then(function (err, user) {
     if (err) { return cb(err); }
-    console.log(user.username)
-    cb(null, user.username);
+    cb(null, user.id);
   });
 });
 
@@ -50,8 +49,6 @@ app.use(require('express-session')({ secret: 'keyboard cat', resave: false, save
 
 // Initialize Passport and restore authentication state, if any, from the
 // session.
-app.use(passport.initialize());
-app.use(passport.session());
 
 
 app.get("/posts", postsController.index)
@@ -66,11 +63,9 @@ app.get("/signup", function(req, res){
 })
 
 app.post("/signin", passport.authenticate('local', { 
-  failureRedirect: '/signin'
-}), function(req, res){
-  console.log("I am here")
-  res.redirect("/posts")
-})
+  failureRedirect: '/signin',
+  successRedirect: '/posts'
+}))
 
 app.post("/signup", function(req, res){
   User.findOne({

@@ -2,6 +2,7 @@ var db = require("../config/db")
 var Post = require("../models/post")(db)
 module.exports = {
   index: function(req, res){
+      console.log("no ia m here")
     Post.findAll().then(function(posts){
       res.render("posts/index",{posts: posts})
     }) 
