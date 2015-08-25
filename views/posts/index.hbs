@@ -1,4 +1,8 @@
 <h1>Posts</h1>
+{{#if profile}}
+  Logged in as
+  {{profile.displayName}}
+  <a href='/signout'>Log Out</a>
 <div class='post new'>
   <form method="post" action="/posts">
     <h3><input type="text" name="title" placeholder="Post Title"></h3>
@@ -15,3 +19,6 @@
      </form>
    </div>
 {{/each}}
+{{else}}
+  <a href='/auth/twitter'>Log in with Twitter</a>
+{{/if}}
