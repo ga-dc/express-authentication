@@ -6,12 +6,12 @@ html{
   border-radius: 5px;
   width:250px;
   float:left;
-  color: #fff;
   margin: 0 10px 10px 0;
 }
 
 .post h3{
   margin-top:0;
+  color: #fff;
   letter-spacing: .05em;
   padding:1rem;
   background: #333;
