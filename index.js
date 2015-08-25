@@ -11,10 +11,6 @@ var postsController = require("./controllers/postsController")
 app.get("/posts", postsController.index)
 app.delete("/posts/:id", postsController.destroy)
 app.post("/posts", postsController.create)
-/*
-app.get("/posts/new", postsController.new)
-app.get("/posts/:id", postsController.show)
-*/
 
 app.listen(3001, function(){
   console.log("listening on port 3001")
