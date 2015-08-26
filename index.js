@@ -3,17 +3,20 @@ var app = express()
 var methodOverride = require('method-override')
 var bodyParser = require('body-parser')
 var bcrypt = require("bcrypt-nodejs")
-app.use(methodOverride('_method'))
-app.use(express.static("public"))
-app.use(bodyParser({urlencode: true}))
-app.set("view engine","hbs")
 var postsController = require("./controllers/postsController")
 var passport = require("passport")
 var Strategy = require("passport-local").Strategy
 var db = require("./config/db")
 var User = require("./models/user")(db)
-app.use(passport.initialize());
-app.use(passport.session());
+
+app.use(methodOverride('_method'))
+app.use(express.static("public"))
+app.use(bodyParser({urlencode: true}))
+app.set("view engine","hbs")
+app.use(require('cookie-parser')());
+app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+
 
 passport.use(new Strategy(function(username, pass, cb){
   var hashedPass = bcrypt.hashSync(pass)
@@ -27,7 +30,6 @@ passport.use(new Strategy(function(username, pass, cb){
     return cb(null, false); }
     if (!bcrypt.compareSync(pass, user.password)){ 
       return cb(null, false); }
-    console.log("i made it this far")
     return cb(null, user);
   })
 }))
@@ -37,19 +39,21 @@ passport.serializeUser(function(user, cb) {
 });
 
 passport.deserializeUser(function(id, cb) {
-  User.find({ where: {id: id}}).then(function (err, user) {
-    if (err) { return cb(err); }
-    cb(null, user.id);
+  User.findById(id).then(function (user) {
+    cb(null, user);
   });
 });
 
-app.use(require('cookie-parser')());
-app.use(require('body-parser').urlencoded({ extended: true }));
-app.use(require('express-session')({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
 
-// Initialize Passport and restore authentication state, if any, from the
-// session.
-
+app.use(function(req,res,next){
+  console.log("here dood")
+  if(req.user){
+    res.locals.user = req.user.username
+  }
+  next()
+})
 
 app.get("/posts", postsController.index)
 app.delete("/posts/:id", postsController.destroy)
