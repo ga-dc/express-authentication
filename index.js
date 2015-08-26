@@ -25,7 +25,7 @@ passport.use(new Strategy(function(username, pass, cb){
       username: username
     }
   }).then(function(user, err){
-    if (err) { console.log("there"); return cb(err); }
+    if (err) { return cb(err); }
     if (!user) { 
     return cb(null, false); }
     if (!bcrypt.compareSync(pass, user.password)){ 
