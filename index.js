@@ -48,7 +48,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(function(req,res,next){
-  console.log("here dood")
   if(req.user){
     res.locals.user = req.user.username
   }
@@ -65,13 +64,17 @@ app.get("/signin", function(req, res){
 app.get("/signup", function(req, res){
   res.render("auth/signup")
 })
+app.get("/signout", function(req,res){
+  req.session.destroy()
+  res.redirect("/posts")
+})
 
 app.post("/signin", passport.authenticate('local', { 
   failureRedirect: '/signin',
   successRedirect: '/posts'
 }))
 
-app.post("/signup", function(req, res){
+app.post("/signup", function(req, res, next){
   User.findOne({
     where: {
      username: req.body.username
@@ -82,7 +85,7 @@ app.post("/signup", function(req, res){
         username: req.body.username,
 	password: bcrypt.hashSync(req.body.password)
       }).then(function(user){
-        res.redirect("/posts")
+        passport.authenticate("local", {failureRedirect:"/signup", successRedirect: "/posts"})(req, res, next)
       })
     } else {
       res.send("user exists")
